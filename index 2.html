@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>福満園ハウストーナメント</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; background: #f9f9f9; }
+    h1 { text-align: center; font-size: 1.8em; margin-bottom: 1em; }
+    h2 { font-size: 1.2em; margin-top: 2em; }
+    .table-container { overflow-x: auto; margin-bottom: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 0 auto; }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 6px 10px;
+      text-align: center;
+      font-size: 0.9em;
+      white-space: nowrap;
+    }
+    th { background-color: #eee; }
+    .block { background: white; padding: 16px; margin: 24px 0; box-shadow: 0 0 5px rgba(0,0,0,0.1); border-radius: 12px; }
+  </style>
+</head>
+<body>
+  <h1>福満園ハウストーナメント</h1>
+
+  <div class="block">
+    <h2>❤️ブロック｜予選ロビン表</h2>
+    <div id="heart-robin" class="table-container"></div>
+  </div>
+
+  <div class="block">
+    <h2>❤️ブロック｜対戦予定表</h2>
+    <div id="heart-match" class="table-container"></div>
+  </div>
+
+  <div class="block">
+    <h2>♦️ブロック｜予選ロビン表</h2>
+    <div id="diamond-robin" class="table-container"></div>
+  </div>
+
+  <div class="block">
+    <h2>♦️ブロック｜対戦予定表</h2>
+    <div id="diamond-match" class="table-container"></div>
+  </div>
+
+  <div class="block">
+    <h2>♠️ブロック｜予選ロビン表</h2>
+    <div id="spade-robin" class="table-container"></div>
+  </div>
+
+  <div class="block">
+    <h2>♠️ブロック｜対戦予定表</h2>
+    <div id="spade-match" class="table-container"></div>
+  </div>
+
+<script>
+const SHEET_ID = "13WRYoE2TUwA8-lBcCgrQhU8kBu_1i8IM3hNBwHhju6Y";
+
+function createTableHTML(data) {
+  let html = "<table><thead><tr>";
+  if (data.length > 0) {
+    for (const col of Object.keys(data[0])) {
+      html += `<th>${col}</th>`;
+    }
+  }
+  html += "</tr></thead><tbody>";
+  for (const row of data) {
+    html += "<tr>";
+    for (const col in row) {
+      html += `<td>${row[col] ?? ""}</td>`;
+    }
+    html += "</tr>";
+  }
+  html += "</tbody></table>";
+  return html;
+}
+
+function loadTable(sheetName, containerId) {
+  const url = "https://opensheet.elk.sh/" + SHEET_ID + "/" + encodeURIComponent(sheetName);
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById(containerId).innerHTML = createTableHTML(data);
+    })
+    .catch(err => console.error("Failed to load", sheetName, err));
+}
+loadTable("❤️ロビンビュー", "heart-robin");
+loadTable("❤️対戦ビュー", "heart-match");
+loadTable("♦️ロビンビュー", "diamond-robin");
+loadTable("♦️対戦ビュー", "diamond-match");
+loadTable("♠️ロビンビュー", "spade-robin");
+loadTable("♠️対戦ビュー", "spade-match");
+
+</script>
+</body>
+</html>
